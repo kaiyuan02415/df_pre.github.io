@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
   <!-- Replace the content tag with appropriate information -->
-  <meta name="description" content="Optimizing Diffusion Model Inference by caching Cross-Attention outputs.">
+  <meta name="description" content="Inference-Time Optimization for Diffusion Models">
   <meta property="og:title" content="CAIR Project Page"/>
-  <meta property="og:description" content="Reduce computational cost and latency in diffusion models using Cross-Attention caching."/>
+  <meta property="og:description" content="Inference-Time Optimization for Diffusion Model"/>
   <meta property="og:url" content="None"/>
   <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
   <meta property="og:image" content="static/image/your_banner_image.png" />
@@ -52,27 +52,46 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Cross-Attention Inference Reduction</h1>
+            <h1 class="title is-1 publication-title">Inference-Time Optimization for Diffusion Models</h1>
             <div class="is-size-5 publication-authors">
               <!-- Paper authors -->
               <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">Jie ji</a><sup>*</sup>,</span>
-                <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Kaiyuan Deng</a><sup>*</sup>,</span>
+                <a href="https://github.com/kaiyuan02415" target="_blank">Kaiyuan Deng</a><sup>*</sup></span>
                   <!-- <span class="author-block">
                     <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Third Author</a> -->
                   </span>
-                  </div>
-
+                  <!-- </div> -->
                   <div class="is-size-5 publication-authors">
-                    <span class="author-block">Clemson University<br>2024 Class Project</span>
+                    <span class="author-block">Clemson University<br>2025-6070 Course</span>
                     <p style="font-size: 0.9rem;">
-                      <a href="static/file/FINAL_PROJ.pdf" target="_blank" download>Download Project PDF</a>
+                      <a href="static/file/ITS.pdf" target="_blank" download>Download Project PDF</a>
                     </p>
-                    <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution</small></span>
                   </div>
-
                   <div class="column has-text-centered">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p>
+            In recent years, diffusion models have attracted widespread attention for their ability to generate high-quality images, with many works focusing on improving performance by increasing training data, model size, and the number of denoising steps. 
+            Current approaches can be categorized into training-required and training-free methods. Recent advances in large language models have demonstrated that additional inference-time computation can be leveraged to search for better outputs, opening up new perspectives for generative models. Inference-time Optimization (training-free) leverages existing pretrained models for post-processing to quickly enhance generation quality while avoiding the heavy computational cost of retraining.        
+          </p>
+          <div class="columns">
+            <div class="column">
+              <img src="static/images/i1.png" alt="First image description" />
+            </div>
+            <div class="column">
+              <img src="static/images/i2.png" alt="Second image description" />
+            </div>
           </div>
         </div>
       </div>
@@ -85,14 +104,10 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Introduction</h2>
+        <h2 class="title is-3">Current Problem</h2>
         <div class="content has-text-justified">
           <p>
-            Problem: Diffusion models have high inference latency due to sequential denoising.<br>
-            Key Insight: Cross-attention maps converge early, making later computations redundant.<br>
-            Proposed Solution:<br>
-            CAIR: Cache cross-attention outputs after the first 𝑛 steps.<br>
-            Goal: Reduce computational cost and latency while maintaining generation quality.<br>
+          Current inference methods that solely rely on increasing denoising steps often encounter a performance bottleneck, where further computational investment does not yield significant gains. 
           </p>
         </div>
       </div>
@@ -104,47 +119,23 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Motivation</h2>
+        <h2 class="title is-3">Method- Inference-Time Initial Noise Optimization</h2>
         <div class="content has-text-justified">
           <p>
-            DeepCache Insight:<br>
-            Caches U-Net feature maps to reduce redundant computations.
-            Inspired us to explore caching for cross-attention mechanisms.<br>
-            Our Observation:<br>
-            Cross-attention maps converge to a fixed point after 5–10 steps.<br>
-            After convergence, they no longer provide dynamic guidance.<br>
+            Instead of merely increasing the number of denoising steps, we can find better initial noise inputs by investing additional compute at inference time. The core idea is that by using extra compute to perform a guided search – where verifiers rate the candidates and various search algorithms are used – the overall generation quality can significantly exceed the performance achieved by merely scaling the denoising steps.               
           </p>
+          <div class="column">
+            <img src="static/images/fw1.png" alt="Second image description" />
+          </div>
+          <div class="columns">
+            <div class="column">
+              <img src="static/images/a1.png" alt="First image description" />
+            </div>
+            <div class="column">
+              <img src="static/images/a2.png" alt="Second image description" />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Our Observation</h2>
-        <div class="content has-text-justified">
-          <p>
-            Cross-attention output distance converges to a fixed point in the first few steps.<br>
-            Cross-Attention is redundant in the later de-noising step                       
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div>
-        <img src="static/images/ob.png" alt="First image description" />
-        <h2 class="subtitle has-text-centered">
-          Illustration of the difference of cross-attention maps between two consecutive inference steps on ChatGPT generated prompt dataset.
-          Each data point in the figure is the average of 100 prompts and all cross-attention maps.
-        </h2>
       </div>
     </div>
   </div>
@@ -155,58 +146,20 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Method</h2>
+        <h2 class="title is-3">Experiment Result</h2>
         <div class="content has-text-justified">
-          <p>
-            Key Idea: Divide inference into two stages:<br>
-            Semantics-Planning Stage:
-            Compute and cache cross-attention outputs (𝑡≤𝑛).<br>
-            Fidelity-Improving Stage:
-            Reuse cached outputs (𝑡>𝑛).<br>
-            Workflow Diagram:<br>
-            Input Noise → Cross-Attention Caching → Reuse in Later Steps → Output Image.  <br>      
-            
-            Algorithm Detail:<br>
-            Input: Text prompt, initial noise xT, inference steps T,  caching threshold n.<br>
-            Output: Generated image x0.<br>
-            Compute cross-attention maps for first n steps.
-            Cache outputs (CAcache)​.
-            Reuse cached outputs for steps n+1 to T.
-
-          </p>
+          <div class="column">
+            <img src="static/images/r1.png" alt="Second image description" />
+          </div>
+          <div class="column">
+            <img src="static/images/r2.png" alt="Second image description" />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div>
-        <img src="static/images/r2.png" alt="First image description" />
-      </div>
-    </div>
-  </div>
-</section>
-
-  <footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-
-          <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
 
 <!-- Statcounter tracking code -->
   
